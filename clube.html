@@ -1,0 +1,894 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Detalhes do Clube - Edição Pro (API)</title>
+
+    <link
+      href="https://fonts.googleapis.com/css2?family=Oswald:wght@300;400;500;700&family=Poppins:wght@300;400;600&display=swap"
+      rel="stylesheet"
+    />
+
+    <style>
+      :root {
+        --accent-color: #f1c40f;
+        --team-primary: #111;
+        --glass-bg-legenda: rgba(10, 10, 10, 0.4);
+        --glass-border: rgba(255, 255, 255, 0.1);
+      }
+
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Poppins", sans-serif;
+        background-color: #050505;
+        color: #fff;
+        background-size: cover;
+        background-position: center;
+        background-attachment: fixed;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        text-transform: uppercase;
+        transition: background 0.5s ease;
+      }
+
+      body::before {
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: radial-gradient(
+          circle at center,
+          transparent 0%,
+          rgba(0, 0, 0, 0.4) 50%,
+          rgba(0, 0, 0, 0.9) 100%
+        );
+        z-index: -1;
+      }
+
+      .btn-voltar {
+        position: absolute;
+        top: 30px;
+        left: 30px;
+        padding: 10px 25px;
+        background: #fff;
+        color: #000;
+        text-decoration: none;
+        font-weight: 700;
+        font-family: "Oswald", sans-serif;
+        font-size: 0.8rem;
+        border-radius: 2px;
+        z-index: 100;
+        transition: 0.3s;
+        border-bottom: 3px solid var(--accent-color);
+      }
+
+      .fifa-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1.5fr;
+        grid-template-rows: 1.2fr 1.2fr 1fr;
+        gap: 5px;
+        background-color: var(--glass-border);
+        border: 3px solid var(--team-primary);
+        width: 95%;
+        max-width: 1300px;
+        height: 85vh;
+        backdrop-filter: blur(12px);
+      }
+
+      .box {
+        background-color: rgba(10, 10, 10, 0.8);
+        padding: 25px;
+        position: relative;
+        overflow: hidden;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        border: 1px solid transparent;
+        transition: 0.3s;
+      }
+      .box-interativa {
+        cursor: pointer;
+      }
+      .box-interativa:hover {
+        background-color: rgba(255, 255, 255, 0.05);
+        border-color: var(--accent-color);
+      }
+
+      .label {
+        font-family: "Oswald", sans-serif;
+        font-size: 0.75rem;
+        color: var(--accent-color);
+        letter-spacing: 2px;
+        margin-bottom: 5px;
+        font-weight: 400;
+      }
+      .value {
+        font-family: "Oswald", sans-serif;
+        font-size: 1.2rem;
+        font-weight: 500;
+      }
+
+      .box-logo {
+        grid-area: 1 / 1 / 2 / 2;
+        align-items: center;
+        background-color: var(--team-primary);
+        border-bottom: 4px solid var(--accent-color);
+      }
+      .box-logo img {
+        width: 110px;
+        filter: drop-shadow(0 5px 15px rgba(0, 0, 0, 0.5));
+      }
+
+      .box-resumo {
+        grid-area: 1 / 2 / 2 / 5;
+        padding: 30px 50px;
+        text-align: left;
+      }
+      .box-resumo h2 {
+        font-family: "Oswald", sans-serif;
+        font-size: 2.5rem;
+        color: #fff;
+        margin-bottom: 10px;
+      }
+      .box-resumo p {
+        text-transform: none;
+        font-size: 1.05rem;
+        color: #ccc;
+        line-height: 1.5;
+        font-weight: 300;
+      }
+
+      .box-titulos {
+        grid-area: 2 / 1 / 3 / 2;
+        align-items: center;
+        text-align: center;
+      }
+      .taca-icon {
+        width: 60px;
+        margin-bottom: 10px;
+        filter: drop-shadow(0 0 10px var(--accent-color));
+      }
+      .box-titulos .number {
+        font-family: "Oswald", sans-serif;
+        font-size: 3rem;
+        font-weight: 700;
+        color: #fff;
+        line-height: 1;
+      }
+
+      .box-idolos {
+        grid-area: 2 / 2 / 3 / 3;
+      }
+      .box-jogos {
+        grid-area: 2 / 3 / 3 / 4;
+      }
+      .box-elenco {
+        grid-area: 2 / 4 / 3 / 5;
+      }
+      .box-estadio {
+        grid-area: 3 / 1 / 4 / 3;
+        background-image:
+          linear-gradient(to top, rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.2)),
+          url("https://images.unsplash.com/photo-1508098682722-e99c43a406b2?auto=format&fit=crop&q=80&w=1000");
+        background-size: cover;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: flex-end;
+      }
+      .box-recordes {
+        grid-area: 3 / 3 / 4 / 4;
+        align-items: center;
+        text-align: center;
+      }
+      .box-uniforme {
+        grid-area: 3 / 4 / 4 / 5;
+        align-items: center;
+        text-align: center;
+      }
+
+      .modal {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(10px);
+        z-index: 1000;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+      }
+
+      .modal-content {
+        background: rgba(15, 15, 15, 0.98);
+        border-left: 5px solid var(--accent-color);
+        width: 100%;
+        max-width: 700px;
+        max-height: 85vh;
+        overflow-y: auto;
+        padding: 50px;
+        position: relative;
+        animation: modalEntrada 0.4s ease;
+      }
+
+      .modal-content.no-padding {
+        padding: 0;
+        overflow: hidden;
+        border-left: none;
+      }
+      .modal-content::-webkit-scrollbar {
+        width: 8px;
+      }
+      .modal-content::-webkit-scrollbar-thumb {
+        background: var(--accent-color);
+        border-radius: 4px;
+      }
+
+      @keyframes modalEntrada {
+        from {
+          opacity: 0;
+          transform: translateX(-30px);
+        }
+        to {
+          opacity: 1;
+          transform: translateX(0);
+        }
+      }
+
+      .close-modal {
+        position: absolute;
+        top: 15px;
+        right: 25px;
+        font-size: 2.5rem;
+        cursor: pointer;
+        color: #555;
+        transition: 0.3s;
+        z-index: 100;
+      }
+      .close-modal:hover {
+        color: #fff;
+      }
+
+      .modal-content h2 {
+        font-family: "Oswald", sans-serif;
+        color: var(--accent-color);
+        margin-bottom: 20px;
+        border-bottom: 1px solid #333;
+        padding-bottom: 10px;
+      }
+      .modal-content div {
+        text-transform: none;
+        line-height: 1.7;
+        color: #ddd;
+        font-size: 1rem;
+      }
+
+      .carousel-container {
+        position: relative;
+        width: 100%;
+        height: 70vh;
+        background: #000;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .carousel-img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        transition: opacity 0.3s ease;
+      }
+
+      .btn-carrossel {
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0, 0, 0, 0.4);
+        color: white;
+        border: none;
+        width: 50px;
+        height: 50px;
+        font-size: 1.5rem;
+        cursor: pointer;
+        z-index: 10;
+        transition: 0.3s;
+        border-radius: 50%;
+      }
+      .btn-carrossel:hover {
+        background: var(--accent-color);
+        color: #000;
+      }
+      .btn-carrossel.prev {
+        left: 15px;
+      }
+      .btn-carrossel.next {
+        right: 15px;
+      }
+
+      .btn-zoom {
+        position: absolute;
+        top: 20px;
+        left: 20px;
+        background: rgba(0, 0, 0, 0.4);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        border: 1px solid rgba(255, 255, 255, 0.2);
+        color: white;
+        width: 45px;
+        height: 45px;
+        border-radius: 8px;
+        cursor: pointer;
+        z-index: 30;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: 0.3s;
+        font-size: 1.2rem;
+      }
+      .btn-zoom:hover {
+        background: var(--accent-color);
+        color: #000;
+        transform: scale(1.1);
+      }
+
+      .carousel-container.full-view {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        z-index: 2000;
+      }
+      .carousel-container.full-view .carousel-img {
+        object-fit: contain;
+        background: #000;
+      }
+      .carousel-container.full-view .legenda-estadio,
+      .carousel-container.full-view .btn-carrossel {
+        display: none;
+      }
+
+      .legenda-estadio {
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        width: 100%;
+        background: var(--glass-bg-legenda);
+        backdrop-filter: blur(20px);
+        -webkit-backdrop-filter: blur(20px);
+        color: white;
+        transition: height 0.5s cubic-bezier(0.19, 1, 0.22, 1);
+        height: 80px;
+        display: flex;
+        flex-direction: column;
+        border-top: 1px solid rgba(255, 255, 255, 0.1);
+        z-index: 20;
+      }
+
+      .legenda-estadio.expandida {
+        height: 70%;
+        background: rgba(10, 10, 10, 0.7);
+      }
+
+      .legenda-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0 40px;
+        height: 80px;
+        cursor: pointer;
+      }
+
+      .legenda-titulo {
+        font-family: "Oswald", sans-serif;
+        font-size: 1.6rem;
+        color: #fff;
+        letter-spacing: 1px;
+      }
+
+      .seta-expandir {
+        display: inline-block;
+        width: 15px;
+        height: 15px;
+        border-top: 3px solid var(--accent-color);
+        border-right: 3px solid var(--accent-color);
+        transform: rotate(-45deg);
+        transition: transform 0.4s ease;
+        margin-top: 8px;
+      }
+
+      .legenda-estadio.expandida .seta-expandir {
+        transform: rotate(135deg);
+        margin-top: -8px;
+      }
+
+      .legenda-conteudo {
+        padding: 10px 40px 40px 40px;
+        overflow-y: auto;
+        flex: 1;
+        opacity: 0;
+        transition: opacity 0.4s ease;
+        text-transform: none;
+        line-height: 1.8;
+        font-size: 1.1rem;
+        color: rgba(255, 255, 255, 0.9);
+      }
+
+      .legenda-estadio.expandida .legenda-conteudo {
+        opacity: 1;
+        transition-delay: 0.2s;
+      }
+
+      .legenda-conteudo::-webkit-scrollbar {
+        width: 5px;
+      }
+      .legenda-conteudo::-webkit-scrollbar-thumb {
+        background: var(--accent-color);
+      }
+      .lightbox {
+        display: none;
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100vw;
+        height: 100vh;
+        background: rgba(0, 0, 0, 0.9);
+        backdrop-filter: blur(10px);
+        -webkit-backdrop-filter: blur(10px);
+        z-index: 3000;
+        justify-content: center;
+        align-items: center;
+        cursor: zoom-out;
+        animation: modalEntrada 0.3s ease;
+      }
+
+      .lightbox img {
+        max-width: 90%;
+        max-height: 90%;
+        object-fit: contain;
+        filter: drop-shadow(0 15px 25px rgba(0, 0, 0, 0.8));
+      }
+
+      .fechar-lightbox {
+        position: absolute;
+        top: 20px;
+        right: 35px;
+        color: #ccc;
+        font-size: 3rem;
+        cursor: pointer;
+        transition: 0.3s;
+      }
+      .fechar-lightbox:hover {
+        color: #fff;
+        transform: scale(1.1);
+      }
+    </style>
+  </head>
+  <body>
+    <a href="index.html" class="btn-voltar">← VOLTAR</a>
+
+    <div class="fifa-grid" id="main-grid">
+      <div class="box box-logo">
+        <img id="clube-logo" src="" alt="" />
+      </div>
+
+      <div
+        class="box box-resumo box-interativa"
+        onclick="AbrirJanela('HISTÓRIA DO CLUBE', 'full-resumo')"
+      >
+        <div class="label">RESUMO NARRATIVO</div>
+        <h2 id="clube-nome-topo">NOME DO CLUBE</h2>
+        <p id="preview-resumo">Carregando história...</p>
+      </div>
+
+      <div
+        class="box box-titulos box-interativa"
+        onclick="AbrirJanela('GALERIA DE TÍTULOS', 'full-titulos')"
+      >
+        <img
+          src="https://cdn-icons-png.flaticon.com/512/3112/3112946.png"
+          class="taca-icon"
+          alt="Troféu"
+        />
+        <div class="label">CONQUISTAS</div>
+        <div class="number" id="preview-titulos-count">0</div>
+      </div>
+
+      <div
+        class="box box-idolos box-interativa"
+        onclick="AbrirJanela('GRANDES ÍDOLOS', 'full-idolos')"
+      >
+        <div class="label">ÍDOLOS</div>
+        <div class="value" id="preview-idolos">...</div>
+      </div>
+
+      <div
+        class="box box-jogos box-interativa"
+        onclick="AbrirJanela('RECORDISTAS DE JOGOS', 'full-jogos')"
+      >
+        <div class="label">MAIS JOGOS</div>
+        <div class="value" id="preview-jogos">...</div>
+      </div>
+
+      <div
+        class="box box-elenco box-interativa"
+        onclick="AbrirJanela('ELENCO OFICIAL', 'full-elenco')"
+      >
+        <div class="label">ELENCO ATUAL</div>
+        <div
+          class="value"
+          id="preview-elenco"
+          style="color: var(--accent-color)"
+        >
+          BUSCANDO...
+        </div>
+      </div>
+
+      <div
+        class="box box-estadio box-interativa"
+        onclick="AbrirJanela('A CASA DO CLUBE', 'full-estadio')"
+      >
+        <div>
+          <div class="label">ESTÁDIO</div>
+          <div class="value" id="preview-estadio">...</div>
+        </div>
+        <div style="text-align: right">
+          <div class="label">LOCAL</div>
+          <div class="value">OFICIAL</div>
+        </div>
+      </div>
+
+      <div
+        class="box box-recordes box-interativa"
+        onclick="AbrirJanela('RECORDES HISTÓRICOS', 'full-recordes')"
+      >
+        <div class="label">RECORDES</div>
+        <div class="value">VER DETALHES</div>
+      </div>
+
+      <div
+        class="box box-uniforme box-interativa"
+        onclick="AbrirJanela('MANTO SAGRADO', 'full-uniforme')"
+      >
+        <div class="label">UNIFORME</div>
+        <div class="value">VER CORES</div>
+      </div>
+    </div>
+
+    <div id="modalInfo" class="modal">
+      <div class="modal-content" id="janela-modal">
+        <span class="close-modal" onclick="FecharJanela()">&times;</span>
+
+        <div id="lightbox" class="lightbox" onclick="FecharLightbox()">
+          <span class="fechar-lightbox" onclick="FecharLightbox()"
+            >&times;</span
+          >
+          <img id="img-ampliada" src="" alt="Uniforme Ampliado" />
+        </div>
+
+        <h2 id="modalTitle" style="text-transform: uppercase">TÍTULO</h2>
+        <div id="modalBody">CONTEÚDO</div>
+
+        <div id="modalEstadio" style="display: none; width: 100%; height: 100%">
+          <div class="carousel-container" id="container-carrossel">
+            <button
+              class="btn-zoom"
+              onclick="toggleZoom()"
+              title="Ampliar Imagem"
+            >
+              ⛶
+            </button>
+
+            <button class="btn-carrossel prev" onclick="MudarFoto(-1)">
+              &#10094;
+            </button>
+            <img id="img-carrossel" class="carousel-img" src="" alt="Estádio" />
+            <button class="btn-carrossel next" onclick="MudarFoto(1)">
+              &#10095;
+            </button>
+
+            <div class="legenda-estadio" id="caixa-legenda">
+              <div class="legenda-header" onclick="AlternarLegenda()">
+                <span class="legenda-titulo" id="titulo-estadio-carrossel"
+                  >NOME DO ESTÁDIO</span
+                >
+                <span class="seta-expandir"></span>
+              </div>
+              <div class="legenda-conteudo">
+                <p id="historia-estadio-carrossel">História vai aqui...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="JS/dados.js"></script>
+    <script>
+      const infoCompleta = {};
+      let fotosDoClubeAtual = [];
+      let indexDaFotoAtual = 0;
+
+      const coresTimes = {
+        saopaulo: { primary: "#111111", accent: "#FF3B30" },
+        flamengo: { primary: "#111111", accent: "#C4122E" },
+        palmeiras: { primary: "#006437", accent: "#00FF66" },
+        corinthians: { primary: "#111111", accent: "#FFFFFF" },
+        santos: { primary: "#111111", accent: "#FFFFFF" },
+        vasco: { primary: "#000000", accent: "#FF3B30" },
+        fluminense: { primary: "#831D1C", accent: "#00D26A" },
+        botafogo: { primary: "#000000", accent: "#E0E0E0" },
+        atleticomg: { primary: "#000000", accent: "#FFCC00" },
+        cruzeiro: { primary: "#003399", accent: "#00CCFF" },
+        gremio: { primary: "#111111", accent: "#00AEEF" },
+        internacional: { primary: "#111111", accent: "#FF3333" },
+      };
+
+      async function buscarHistoriaWikipedia(tituloWiki) {
+        try {
+          const url = `https://pt.wikipedia.org/w/api.php?action=query&prop=extracts&exintro=true&explaintext=true&titles=${tituloWiki}&format=json&origin=*`;
+          const resposta = await fetch(url);
+          const dados = await resposta.json();
+          const idDaPagina = Object.keys(dados.query.pages)[0];
+          if (idDaPagina === "-1") return "História não encontrada.";
+          return dados.query.pages[idDaPagina].extract.replace(
+            /\n/g,
+            "<br><br>",
+          );
+        } catch (erro) {
+          return "Falha ao carregar a história oficial da Wikipedia.";
+        }
+      }
+
+      async function buscarElencoReal(apiId) {
+        const KEY = "ChaveApi";
+
+        const url = `https://v3.football.api-sports.io/players/squads?team=${apiId}`;
+        const config = {
+          method: "GET",
+          headers: { "x-apisports-key": KEY },
+        };
+        try {
+          const resposta = await fetch(url, config);
+          const dados = await resposta.json();
+          if (dados.response && dados.response.length > 0) {
+            const jogadores = dados.response[0].players;
+            let html = `<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin-top: 20px;">`;
+            jogadores.forEach((j) => {
+              let posicaoPT = j.position;
+              if (j.position === "Goalkeeper") posicaoPT = "Goleiro";
+              if (j.position === "Defender") posicaoPT = "Defensor";
+              if (j.position === "Midfielder") posicaoPT = "Meio-campista";
+              if (j.position === "Attacker") posicaoPT = "Atacante";
+              html += `<div style="border-bottom: 1px solid #333; padding-bottom: 10px;">
+                                <strong style="color: var(--accent-color); font-size: 1.1rem;">${j.number ? j.number + " - " : ""}${j.name}</strong><br>
+                                <span style="color: #aaa;">${posicaoPT} (${j.age} anos)</span></div>`;
+            });
+            html += `</div>`;
+            return html;
+          }
+          return "Elenco não disponível no momento.";
+        } catch (erro) {
+          return "Erro de conexão à API-Sports.";
+        }
+      }
+
+      function atualizarModalAtivo(titulo, novoConteudo) {
+        if (
+          document.getElementById("modalInfo").style.display === "flex" &&
+          document.getElementById("modalTitle").innerText === titulo
+        ) {
+          document.getElementById("modalBody").innerHTML = novoConteudo;
+        }
+      }
+
+      document.addEventListener("DOMContentLoaded", () => {
+        const params = new URLSearchParams(window.location.search);
+        const id = params.get("id");
+        const clube = clubes.find((c) => c.id === id);
+
+        if (clube) {
+          const tema = coresTimes[clube.id] || {
+            primary: "#111",
+            accent: "#f1c40f",
+          };
+          document.documentElement.style.setProperty(
+            "--team-primary",
+            tema.primary,
+          );
+          document.documentElement.style.setProperty(
+            "--accent-color",
+            tema.accent,
+          );
+
+          document.body.style.backgroundImage = `url('${clube.fundo}')`;
+          document.getElementById("clube-logo").src = clube.logo;
+          document.getElementById("clube-nome-topo").innerText = clube.nome;
+
+          const nomeDoEstadio = clube.estadio.split(".")[0];
+
+          document.getElementById("preview-resumo").innerText =
+            clube.resumoCurto;
+          document.getElementById("preview-jogos").innerText =
+            clube.maisJogos[0];
+          document.getElementById("preview-idolos").innerText = clube.idolos
+            .slice(0, 2)
+            .join(", ");
+          document.getElementById("preview-estadio").innerText = nomeDoEstadio;
+
+          if (clube.titulos && Array.isArray(clube.titulos)) {
+            const totalTacas = clube.titulos.reduce((acc, t) => acc + t.qtd, 0);
+            document.getElementById("preview-titulos-count").innerText =
+              totalTacas;
+
+            let htmlTitulos = '<div style="margin-top: 15px;">';
+            clube.titulos.forEach((t) => {
+              htmlTitulos += `
+                  <div style="display: flex; justify-content: space-between; align-items: center; padding: 15px 0; border-bottom: 1px solid rgba(255,255,255,0.1);">
+                      <div style="display: flex; align-items: baseline; flex-wrap: wrap; gap: 8px;">
+                          <h3 style="font-family: 'Oswald', sans-serif; color: var(--accent-color); font-size: 1.4rem; margin: 0;">${t.nome}</h3>
+                          <span style="font-size: 1rem; color: #aaa; text-transform: none;">(${t.anos})</span>
+                      </div>
+                      <div style="background: var(--accent-color); color: #000; font-family: 'Oswald', sans-serif; padding: 4px 12px; font-weight: 700; border-radius: 4px; font-size: 1.1rem; margin-left: 10px;">
+                          x${t.qtd}
+                      </div>
+                  </div>`;
+            });
+            htmlTitulos += "</div>";
+            infoCompleta["full-titulos"] = htmlTitulos;
+          } else {
+            infoCompleta["full-titulos"] =
+              `<p>${clube.titulos.replace(/\|/g, "<br><br>")}</p>`;
+          }
+
+          if (clube.uniformes) {
+            infoCompleta["full-uniforme"] = `
+                <div style="text-align: center;">
+                    <p style="margin-bottom: 30px; font-size: 1.1rem; color: #ccc; text-transform: none; line-height: 1.6;">
+                        ${clube.uniformes.descricao}
+                    </p>
+                    
+                    <div style="display: flex; justify-content: center; gap: 40px; flex-wrap: wrap;">
+                        <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; border-top: 3px solid var(--accent-color); width: 220px;">
+                            <h3 style="font-family: 'Oswald', sans-serif; color: var(--accent-color); margin-bottom: 15px;">TITULAR</h3>
+                            <img src="${clube.uniformes.titular}" alt="Camisa Titular" onclick="abrirLightbox(this.src)" style="width: 100%; height: auto; filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.5)); transition: transform 0.3s; cursor: zoom-in;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        </div>
+
+                        <div style="background: rgba(255,255,255,0.05); padding: 20px; border-radius: 15px; border-top: 3px solid #555; width: 220px;">
+                            <h3 style="font-family: 'Oswald', sans-serif; color: #fff; margin-bottom: 15px;">RESERVA</h3>
+                            <img src="${clube.uniformes.reserva}" alt="Camisa Reserva" onclick="abrirLightbox(this.src)" style="width: 100%; height: auto; filter: drop-shadow(0px 10px 10px rgba(0,0,0,0.5)); transition: transform 0.3s; cursor: zoom-in;" onmouseover="this.style.transform='scale(1.05)'" onmouseout="this.style.transform='scale(1)'">
+                        </div>
+                    </div>
+                </div>
+            `;
+          } else {
+            infoCompleta["full-uniforme"] = `<p>${clube.uniforme}</p>`;
+          }
+
+          // Demais Dados Fixos
+          infoCompleta["full-idolos"] = `<p>${clube.idolos.join("<br>")}</p>`;
+          infoCompleta["full-jogos"] = `<p>${clube.maisJogos.join("<br>")}</p>`;
+          infoCompleta["full-recordes"] = `<p>${clube.recordes}</p>`;
+
+          fotosDoClubeAtual = clube.imagensEstadio;
+          document.getElementById("titulo-estadio-carrossel").innerText =
+            nomeDoEstadio;
+          document.getElementById("historia-estadio-carrossel").innerText =
+            clube.estadio;
+
+          // Chamadas de APIs
+          if (clube.tituloWiki) {
+            buscarHistoriaWikipedia(clube.tituloWiki).then((texto) => {
+              infoCompleta["full-resumo"] =
+                `<div style="text-align: justify;">${texto}</div>`;
+              atualizarModalAtivo(
+                "HISTÓRIA DO CLUBE",
+                infoCompleta["full-resumo"],
+              );
+            });
+          }
+
+          if (clube.apiId) {
+            buscarElencoReal(clube.apiId).then((htmlLista) => {
+              infoCompleta["full-elenco"] = htmlLista;
+              document.getElementById("preview-elenco").innerText =
+                "FICHA ATUALIZADA";
+              atualizarModalAtivo(
+                "ELENCO OFICIAL",
+                infoCompleta["full-elenco"],
+              );
+            });
+          }
+        } else {
+          window.location.href = "index.html";
+        }
+      });
+
+      function AbrirJanela(titulo, chave) {
+        const janela = document.getElementById("janela-modal");
+        const divPadrao = document.getElementById("modalBody");
+        const divEstadio = document.getElementById("modalEstadio");
+        const h2Titulo = document.getElementById("modalTitle");
+
+        document.getElementById("modalInfo").style.display = "flex";
+
+        if (chave === "full-estadio") {
+          janela.classList.add("no-padding");
+          divPadrao.style.display = "none";
+          h2Titulo.style.display = "none";
+          divEstadio.style.display = "block";
+          indexDaFotoAtual = 0;
+          document.getElementById("img-carrossel").src =
+            fotosDoClubeAtual[indexDaFotoAtual];
+          document
+            .getElementById("caixa-legenda")
+            .classList.remove("expandida");
+        } else {
+          janela.classList.remove("no-padding");
+          divEstadio.style.display = "none";
+          h2Titulo.style.display = "block";
+          divPadrao.style.display = "block";
+          h2Titulo.innerText = titulo;
+          divPadrao.innerHTML = infoCompleta[chave];
+        }
+      }
+
+      function FecharJanela() {
+        document.getElementById("modalInfo").style.display = "none";
+      }
+
+      function MudarFoto(direcao) {
+        indexDaFotoAtual += direcao;
+        if (indexDaFotoAtual >= fotosDoClubeAtual.length) indexDaFotoAtual = 0;
+        if (indexDaFotoAtual < 0)
+          indexDaFotoAtual = fotosDoClubeAtual.length - 1;
+        document.getElementById("img-carrossel").src =
+          fotosDoClubeAtual[indexDaFotoAtual];
+      }
+
+      function AlternarLegenda() {
+        const caixaLegenda = document.getElementById("caixa-legenda");
+        caixaLegenda.classList.toggle("expandida");
+      }
+
+      function toggleZoom() {
+        const container = document.getElementById("container-carrossel");
+        const estaAmpliado = container.classList.toggle("full-view");
+
+        const btn = document.querySelector(".btn-zoom");
+        btn.innerHTML = estaAmpliado ? "✕" : "⛶";
+
+        document.querySelector(".close-modal").style.display = estaAmpliado
+          ? "none"
+          : "block";
+      }
+
+      function abrirLightbox(srcImagem) {
+        document.getElementById("img-ampliada").src = srcImagem;
+        document.getElementById("lightbox").style.display = "flex";
+      }
+
+      function FecharLightbox() {
+        document.getElementById("lightbox").style.display = "none";
+      }
+
+      window.onclick = (e) => {
+        if (e.target.className === "modal") FecharJanela();
+      };
+    </script>
+  </body>
+</html>
